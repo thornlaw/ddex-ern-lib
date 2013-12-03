@@ -26,15 +26,38 @@ namespace DDEX.ERN37.MessagingClassLibrary.Samples
             msg.MessageHeader = new MessageHeader
             {
                 MessageId = Guid.NewGuid().ToString(),
-                MessageFileName = "test.xml",
+                MessageFileName = "Profile_AudioSingle.xml",
                 MessageCreatedDateTime = DateTime.UtcNow,
+                MessageControlType = AllowedValues.MessageControlTypeValues._TestMessage,
                 MessageSender = new MessagingParty
                 {
-                    PartyId = { new PartyId() }
+                    PartyId = 
+                    { 
+                        new PartyId
+                        {
+                            IsDPID = true,
+                            TypedValue = "PADPIDA0000000001A"
+                        }                        
+                    },
+                    TradingName = new Name
+                    {
+                        TypedValue = "Iron Crown Music"
+                    }
                 },
                 MessageRecipient = new MessagingParty
                 {
-                    PartyId = { new PartyId() }
+                    PartyId = 
+                    { 
+                        new PartyId
+                        {
+                            IsDPID = true,
+                            TypedValue = "PADPIDA0000000002A"
+                        }                        
+                    },
+                    TradingName = new Name
+                    {
+                        TypedValue = "Lamson Digital Distribution"
+                    }
                 }
             };
 
@@ -43,16 +66,17 @@ namespace DDEX.ERN37.MessagingClassLibrary.Samples
 
             msg.ResourceList.SoundRecording.Add(new SoundRecording
                 {
-                    SoundRecordingDetailsByTerritory = 
-                    { 
-                        new SoundRecordingDetailsByTerritory
+                    ResourceReference = "A1",
+                    ReferenceTitle = new ReferenceTitle
+                    {
+                        TitleText = new TitleText
                         {
-                            TerritoryCode = { new CurrentTerritoryCode { TypedValue = AllowedValues.DdexTerritoryCodeValues._Worldwide } },                            
-                        },
+                            TypedValue = "Can you feel ...the Monkey Claw!"
+                        }
                     },
                     SoundRecordingType = new SoundRecordingType
                     {
-                        TypedValue = AllowedValues.SoundRecordingTypeValues._NonMusicalWorkReadalongSoundRecording
+                        TypedValue = AllowedValues.SoundRecordingTypeValues._MusicalWorkSoundRecording
                     },
                     SoundRecordingId =
                     {
@@ -60,7 +84,34 @@ namespace DDEX.ERN37.MessagingClassLibrary.Samples
                         {
                             ISRC = "666"
                         }
-                    }
+                    },
+                    Duration = new TimeSpan(0, 13, 31),
+                    SoundRecordingDetailsByTerritory =
+                    {
+                        new SoundRecordingDetailsByTerritory
+                        {
+                            TerritoryCode = { new CurrentTerritoryCode { TypedValue = AllowedValues.DdexTerritoryCodeValues._Worldwide } },
+                            Title = 
+                            { 
+                                new Title 
+                                {
+                                    TitleType = AllowedValues.TitleTypeValues._FormalTitle,
+                                    TitleText = new TitleText 
+                                    {
+                                        TypedValue = "Can you feel ...the Monkey Claw!"
+                                    }
+                                },
+                                new Title 
+                                {
+                                    TitleType = AllowedValues.TitleTypeValues._DisplayTitle,
+                                    TitleText = new TitleText 
+                                    {
+                                        TypedValue = "Can you feel ...the Monkey Claw!"
+                                    }
+                                },
+                            },
+                        },
+                    },
                 });
 
             foreach (var error in msg.Validate(Helpers.ErnNamespace, Helpers.ErnSchemaUrl).Messages)
