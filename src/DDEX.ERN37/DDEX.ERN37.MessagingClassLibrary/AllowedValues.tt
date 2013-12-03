@@ -1,0 +1,37 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml.dll" #>
+<#@ assembly name="System.Xml.Linq.dll" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ output extension=".cs" #>
+namespace DDEX.ERN37.MessagingClassLibrary
+{
+    using ddex.net.xml.ern.Item37D2;
+
+	public static class AllowedValues
+    {
+		<# XNamespace ns = "http://www.w3.org/2001/XMLSchema";
+		string root = Host.ResolvePath(string.Empty); 
+		XDocument doc = XDocument.Load(Path.Combine(root, "avs.xsd"));
+		foreach (var simpleType in doc.Descendants(ns + "simpleType")) { #>
+
+		public static class <#= simpleType.Attribute("name").Value #>Values
+		{
+			<# foreach (var enumeration in simpleType.Descendants(ns + "enumeration")) { #>
+
+			public const string <#= "_" + enumeration.Attribute("value").Value
+						.Replace("-", string.Empty)
+						.Replace(".", "_")
+						.Replace("(", "_")
+						.Replace(")", string.Empty) #> = "<#= enumeration.Attribute("value").Value #>";
+			<# } #>
+
+		}
+		<# } #>
+	}
+}
